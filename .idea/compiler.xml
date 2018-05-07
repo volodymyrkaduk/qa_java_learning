@@ -6,6 +6,8 @@
       <module name="addressbook-test_test" target="1.8" />
       <module name="IdeaProjects_main" target="1.8" />
       <module name="IdeaProjects_test" target="1.8" />
+      <module name="sandbox_main" target="1.8" />
+      <module name="sandbox_test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
