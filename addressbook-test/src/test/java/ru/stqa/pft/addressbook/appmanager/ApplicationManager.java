@@ -36,7 +36,7 @@ public class ApplicationManager {
         } else if (Objects.equals(browser, BrowserType.IE)) {
             wd = new InternetExplorerDriver();
         }
-        wd.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+        wd.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
         sessionHelper = new SessionHelper (wd);
         groupHelper = new GroupHelper(wd);
         navigationHelper = new NavigationHelper(wd);
