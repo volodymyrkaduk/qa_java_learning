@@ -3,10 +3,15 @@ package ru.stqa.pft.addressbook.appmanager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
+import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.PersonData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vkaduk on 04.05.18.
@@ -44,9 +49,12 @@ public class PersonHelper extends HelperBase {
         acceptAlert();
     }
 
-    public void selectPerson() {
+    public void selectPerson(int index) {
+        if (index < 0) {
+            index = 0;
+        }
         if (!wd.findElement(By.name("selected[]")).isSelected()) {
-            click(By.name("selected[]"));
+            wd.findElements(By.name("selected[]")).get(index).click();
         }
     }
 
@@ -67,5 +75,30 @@ public class PersonHelper extends HelperBase {
         initPersonCreation();
         fillPersonForm(personData, true);
         submitPersonCreation();
+    }
+
+    public int getPersonCount() {
+        return wd.findElements(By.name("selected[]")).size();
+    }
+
+    public List<PersonData> getPersonList() {
+        List <PersonData> persons = new ArrayList<PersonData>();
+        int i =2;
+        while (isElementPresent(By.xpath("//table[@id='maintable']/tbody/tr["+ i +"]/td[2]"))) {
+            String [] data = new String[5];
+
+            for (int j = 2; j <= 6; j++) {
+
+                List<WebElement> elements = wd.findElements(By.xpath("//table[@id='maintable']/tbody/tr["+i+"]/td["+j+"]"));
+
+                WebElement element = elements.get(0);
+                data [j-2] = element.getText();
+            }
+
+            PersonData person = new PersonData(data[0], data[1], data[2], data[3], data[4]);
+            persons.add(person);
+            i++;
+        }
+        return persons;
     }
 }
