@@ -1,13 +1,10 @@
 package ru.stqa.pft.addressbook.appmanager;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
-import ru.stqa.pft.addressbook.model.GroupData;
 import ru.stqa.pft.addressbook.model.PersonData;
 
 import java.util.ArrayList;
@@ -29,13 +26,16 @@ public class PersonHelper extends HelperBase {
     }
 
     public void fillPersonForm(PersonData personData, boolean isCreation) {
-        type(By.name("firstname"), personData.getFirstname());
         type(By.name("lastname"), personData.getLastname());
-        type(By.name("nickname"), personData.getNickname());
+        type(By.name("firstname"), personData.getFirstname());
+        type(By.name("address"), personData.getAddress());
         type(By.name("email"), personData.getEmail());
+        type(By.name("home"), personData.getPhone());
 
         if (isCreation) {
-            new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(personData.getGroup());
+            if (personData.getGroup() != null) {
+                new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(personData.getGroup());
+            } else return;
         } else
             Assert.assertFalse(isElementPresent (By.name("new_group")));
     }
@@ -58,8 +58,11 @@ public class PersonHelper extends HelperBase {
         }
     }
 
-    public void initPersonModification() {
-        click(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
+    public void initPersonModification(int index) {
+        if (! isElementPresent(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"))) {
+            createPerson(new PersonData("lastname", "adam1", "address", "1mail@web.com", "123456", "test-1"));
+        }
+        click(By.xpath("//table[@id='maintable']/tbody/tr["+(index+2)+"]/td[8]/a/img"));
     }
 
     public void submitPersonModification() {
@@ -87,6 +90,8 @@ public class PersonHelper extends HelperBase {
         while (isElementPresent(By.xpath("//table[@id='maintable']/tbody/tr["+ i +"]/td[2]"))) {
             String [] data = new String[5];
 
+            int id = Integer.parseInt(wd.findElement(By.xpath("//table[@id='maintable']/tbody/tr["+ i +"]/td[1]/input")).getAttribute("id"));
+
             for (int j = 2; j <= 6; j++) {
 
                 List<WebElement> elements = wd.findElements(By.xpath("//table[@id='maintable']/tbody/tr["+i+"]/td["+j+"]"));
@@ -95,7 +100,7 @@ public class PersonHelper extends HelperBase {
                 data [j-2] = element.getText();
             }
 
-            PersonData person = new PersonData(data[0], data[1], data[2], data[3], data[4]);
+            PersonData person = new PersonData(id, data[0], data[1], data[2], data[3], data[4], null);
             persons.add(person);
             i++;
         }
