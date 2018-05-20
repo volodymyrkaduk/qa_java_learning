@@ -60,7 +60,7 @@ public class PersonHelper extends HelperBase {
 
     public void initPersonModification(int index) {
         if (! isElementPresent(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"))) {
-            createPerson(new PersonData("lastname", "adam1", "address", "1mail@web.com", "123456", "test-1"));
+            create(new PersonData().setFirstname("adam1").setLastname("new_lastname").setAddress("address").setEmail("1mail@web.com").setPhone("123456").setGroup("test-1"));
         }
         click(By.xpath("//table[@id='maintable']/tbody/tr["+(index+2)+"]/td[8]/a/img"));
     }
@@ -73,18 +73,29 @@ public class PersonHelper extends HelperBase {
         return isElementPresent(By.xpath("//table[@id='maintable']/tbody/tr[2]/td[8]/a/img"));
     }
 
-    public void createPerson (PersonData personData){
+    public void create(PersonData personData){
         this.personData = personData;
         initPersonCreation();
         fillPersonForm(personData, true);
         submitPersonCreation();
     }
 
+    public void modify(int index, PersonData person) {
+        initPersonModification(index);
+        fillPersonForm(person, false);
+        submitPersonModification();
+    }
+
+    public void delete(int index) {
+        selectPerson(index);
+        deleteSelectedPerson();
+    }
+
     public int getPersonCount() {
         return wd.findElements(By.name("selected[]")).size();
     }
 
-    public List<PersonData> getPersonList() {
+    public List<PersonData> list() {
         List <PersonData> persons = new ArrayList<PersonData>();
         int i =2;
         while (isElementPresent(By.xpath("//table[@id='maintable']/tbody/tr["+ i +"]/td[2]"))) {
@@ -100,7 +111,7 @@ public class PersonHelper extends HelperBase {
                 data [j-2] = element.getText();
             }
 
-            PersonData person = new PersonData(id, data[0], data[1], data[2], data[3], data[4], null);
+            PersonData person = new PersonData().setId(id).setLastname(data[0]).setFirstname(data[1]).setAddress(data[2]).setEmail(data[3]).setPhone(data[4]);
             persons.add(person);
             i++;
         }

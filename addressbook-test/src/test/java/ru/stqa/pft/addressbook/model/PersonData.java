@@ -1,33 +1,14 @@
 package ru.stqa.pft.addressbook.model;
 
 public class PersonData {
-    private int id;
-    private final String firstname;
-    private final String lastname;
-    private final String address;
-    private final String email;
-    private final String phone;
+    private int id = 0;
+    private String firstname;
+    private String lastname;
+    private String address;
+    private String email;
+    private String phone;
     private String group;
 
-    public PersonData(int id, String lastname, String firstname, String address, String email, String phone, String group) {
-        this.id = id;
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.address = address;
-        this.email = email;
-        this.phone = phone;
-        this.group = group;
-    }
-
-    public PersonData(String lastname, String firstname, String address, String email, String phone, String group) {
-        this.id = 0;
-        this.lastname = lastname;
-        this.firstname = firstname;
-        this.address = address;
-        this.email = email;
-        this.phone = phone;
-        this.group = group;
-    }
     public int getId() {
         return id;
     }
@@ -56,8 +37,39 @@ public class PersonData {
         return phone;
     }
 
-    public void setId(int id) {
+    public PersonData setId(int id) {
         this.id = id;
+        return this;
+    }
+
+    public PersonData setFirstname(String firstname) {
+        this.firstname = firstname;
+        return this;
+    }
+
+    public PersonData setLastname(String lastname) {
+        this.lastname = lastname;
+        return this;
+    }
+
+    public PersonData setAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public PersonData setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public PersonData setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public PersonData setGroup(String group) {
+        this.group = group;
+        return this;
     }
 
     @Override
